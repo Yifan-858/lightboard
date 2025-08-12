@@ -20,8 +20,8 @@
     <h1>Lightboard</h1>
     <canvas id="stage" width="400" height="300" style="background-color: black;"></canvas>
     <button onclick="addLight()">Add Light</button>
-    <!--<button onclick="saveScene()">💾 Save Scene</button>
-    <button onclick="loadScene()">📂 Load Scene</button>-->
+    <button onclick="saveScene()">💾 Save Scene</button>
+    <button onclick="loadScene()">📂 Load Scene</button>
 
     <script>
     const canvas = document.getElementById('stage');
@@ -58,24 +58,24 @@
       const color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
       const radius = Math.random() * 70 + 40;
       const intensity = Math.floor(Math.random() * 100);
-      lights.push({ x, y, color, intensity,radius });
+      lights.push({ x, y, color, intensity, radius });
       drawLights();
     }
 
-    //async function saveScene() {
-    //  await fetch('/api/light/save', {
-    //    method: 'POST',
-    //    headers: { 'Content-Type': 'application/json' },
-    //    body: JSON.stringify(lights)
-    //  });
-    //  alert('Scene saved!');
-    //}
+    async function saveScene() {
+      await fetch('/api/light/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lights)
+      });
+      alert('Scene saved!');
+    }
 
-    //async function loadScene() {
-    //  const res = await fetch('/api/light/load');
-    //  lights = await res.json();
-    //  drawLights();
-    //}
+    async function loadScene() {
+      const res = await fetch('/api/light/load');
+      lights = await res.json();
+      drawLights();
+    }
     </script>
 </body>
 </html>

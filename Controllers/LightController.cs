@@ -5,9 +5,9 @@ using LightboardApi.Models;//Light.cs
 
 namespace LightboardApi.Controllers 
 {
-    //[ApiController]
-    //[Route("api/[controller]")]
-    public class LightController : ControllerBase
+    [ApiController]
+    [Route("api/[controller]")]
+    public class LightController : ControllerBase //no view engine as in Controller
     {
         private const string FilePath = "lights.json";
 
