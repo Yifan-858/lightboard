@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using LightboardApi.Models;
+﻿using Microsoft.AspNetCore.Mvc; //gives MVC/Web API attributes ([HttpGet], [HttpPost], ControllerBase...)
+using System.Text.Json;//JsonSerializer
+using LightboardApi.Models;//Light.cs
 
 
 namespace LightboardApi.Controllers 
