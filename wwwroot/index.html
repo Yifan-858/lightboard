@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mini Lightboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lightboard</h1>
+    <canvas id="stage" width="400" height="300"></canvas>
+    <button onclick="addLight()">Add Light</button>
+    <button onclick="saveScene()">💾 Save Scene</button>
+    <button onclick="loadScene()">📂 Load Scene</button>
+
+    <script>
+    const canvas = document.getElementById('stage');
+    const ctx = canvas.getContext('2d');
+    let lights = [];
+
+    function drawLights() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const light of lights) {
+        ctx.beginPath();
+        ctx.arc(light.x, light.y, 20, 0, Math.PI * 2);
+        ctx.fillStyle = light.color;
+        ctx.globalAlpha = light.intensity / 100;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function addLight() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const color = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+      const intensity = Math.floor(Math.random() * 100);
+      lights.push({ x, y, color, intensity });
+      drawLights();
+    }
+
+    async function saveScene() {
+      await fetch('/api/light/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lights)
+      });
+      alert('Scene saved!');
+    }
+
+    async function loadScene() {
+      const res = await fetch('/api/light/load');
+      lights = await res.json();
+      drawLights();
+    }
+    </script>
+</body>
+</html>

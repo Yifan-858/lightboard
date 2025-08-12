@@ -1,0 +1,6 @@
+@LightboardApi_HostAddress = http://localhost:5293
+
+GET {{LightboardApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
