@@ -1,9 +1,1 @@
-[
-  {
-    "x": 50,
-    "y": 50,
-    "color": "#fff",
-    "intensity": 50,
-    "radius": 15
-  }
-]
+[{"x":371,"y":129,"color":"#8d08b9","intensity":21,"radius":75},{"x":361,"y":292,"color":"#e3d9ef","intensity":78,"radius":52},{"x":277,"y":96,"color":"#125609","intensity":57,"radius":88},{"x":10,"y":131,"color":"#429184","intensity":60,"radius":104},{"x":392,"y":164,"color":"#9ef0d7","intensity":26,"radius":107},{"x":37,"y":235,"color":"#44408e","intensity":80,"radius":66}]

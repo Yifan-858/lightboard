@@ -53,10 +53,10 @@
     }
 
     function addLight() {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
+        const x = Math.floor(Math.random() * canvas.width);
+        const y = Math.floor(Math.random() * canvas.height);
       const color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-      const radius = Math.random() * 70 + 40;
+        const radius = Math.floor(Math.random() * 70 + 40);
       const intensity = Math.floor(Math.random() * 100);
       lights.push({ x, y, color, intensity, radius });
       drawLights();
