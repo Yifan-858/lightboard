@@ -1,9 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations; //needed for [Key]
+using System.Text.Json.Serialization; //for storing in json
 
 namespace LightboardApi.Models
 {
     public class Light
     {
+        [Key] // optional if named Id
+        public int Id { get; set; } // EF Core primary key
+
         [JsonPropertyName("x")]
         public int X { get; set; }
 
