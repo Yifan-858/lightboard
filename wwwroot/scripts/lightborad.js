@@ -1,0 +1,59 @@
+﻿const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+const addButton = document.getElementById("addLight");
+const saveButton = document.getElementById("saveScene");
+const loadButton = document.getElementById("loadScene");
+
+let lights = [];
+
+addButton.addEventListener("click", addLight);
+saveButton.addEventListener("click", saveScene);
+loadButton.addEventListener("click", loadScene);
+
+function addLight() {
+    const x = Math.floor(Math.random() * canvas.width);
+    const y = Math.floor(Math.random() * canvas.height);
+    const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+    const radius = Math.floor(Math.random() * 70 + 40);
+    const intensity = Math.floor(Math.random() * 100);
+    lights.push({ x, y, color, intensity, radius });
+    drawLights();
+}
+
+function drawLights() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const light of lights) {
+        ctx.beginPath();
+        ctx.arc(light.x, light.y, light.radius, 0, Math.PI * 2);
+        const gradient = ctx.createRadialGradient(light.x, light.y, light.radius * 0.1, light.x, light.y, light.radius);
+        gradient.addColorStop(0, light.color);
+        gradient.addColorStop(1, hexToRgba(light.color, 0));
+        ctx.fillStyle = gradient;
+        ctx.globalAlpha = light.intensity / 50;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+}
+
+function hexToRgba(hex, alpha) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+}
+
+async function saveScene() {
+    await fetch("/api/light/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lights)
+    });
+    alert("Scene saved!");
+}
+
+async function loadScene() {
+    const res = await fetch("/api/light/load");
+    lights = await res.json();
+    drawLights();
+}
