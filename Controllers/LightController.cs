@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LightboardApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")]//define URL here: api/light(without Controller)/save or load
     public class LightController : ControllerBase //no view engine as in Controller
     {
         private readonly LightContext _context;
