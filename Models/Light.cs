@@ -22,5 +22,9 @@ namespace LightboardApi.Models
 
         [JsonPropertyName("radius")]
         public int Radius { get; set; } = 20;
+        public int SceneId { get; set; } //foreign key field, store the scene id this light belongs to
+
+        [JsonIgnore]
+        public Scene? Scene { get; set; } //navigation property, a helper to access Scene
     }
 }

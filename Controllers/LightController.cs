@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LightboardApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]//define URL here: api/light(without Controller)/save or load
+    [Route("api/[controller]")] //define URL here: api/light(without Controller)/save or load
     public class LightController : ControllerBase //no view engine as in Controller
     {
         private readonly LightContext _context;
@@ -18,26 +18,84 @@ namespace LightboardApi.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<IActionResult> SaveScene([FromBody] List<Light> lights)
+        public async Task<IActionResult> SaveScene([FromBody] Scene scene) //IActionResult for return just message
         {
-            _context.Lights.RemoveRange(_context.Lights);
+            // _context.Lights.RemoveRange(_context.Lights); //replace the previous lights
 
-            await _context.Lights.AddRangeAsync(lights);
+            _context.Scenes.Add(scene);
             await _context.SaveChangesAsync();
 
             return Ok("Scene saved to SQLite in-memory DB.");
         }
 
-        [HttpGet("load")]
-        public async Task<ActionResult<List<Light>>> LoadScene()
+        [HttpGet("load/{id}")]
+        public async Task<ActionResult<Scene>> LoadScene(int id) //ActionResult for return more
         {
-            var lights = await _context.Lights.ToListAsync();
+            var scene = await _context
+                .Scenes.Include(s => s.Lights) // Include the related lights
+                .FirstOrDefaultAsync(s => s.Id == id);
 
-            if (lights.Count == 0)
+            if (scene == null)
+            {
+                return NotFound($"Scene with id{id} not found.");
+            }
+
+            return Ok(scene);
+        }
+
+        [HttpGet("loadall")]
+        public async Task<ActionResult<Scene>> GetAllScenes()
+        {
+            var allScenes = await _context.Scenes.Include(s => s.Lights).ToListAsync();
+
+            if (allScenes.Count == 0)
                 return NotFound("No scene saved in DB.");
 
-            return Ok(lights);
+            return Ok(allScenes);
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeteleScene(int id)
+        {
+            var scene = await _context
+                .Scenes.Include(s => s.Lights)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (scene == null)
+            {
+                return NotFound($"Scene with id{id} not found.");
+            }
+
+            _context.Scenes.Remove(scene);
+            await _context.SaveChangesAsync();
+
+            return Ok($"Scene {id} deleted.");
+        }
+
+        [HttpPatch("edit/{id}")]
+        public async Task<IActionResult> EditScene(int id, [FromBody] List<Light> updatedLights)
+        {
+            var scene = await _context
+                .Scenes.Include(s => s.Lights)
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (scene == null)
+            {
+                return NotFound($"Scene with id{id} not found.");
+            }
+
+            _context.Lights.RemoveRange(scene.Lights);
+
+            foreach (var light in updatedLights)
+            {
+                light.SceneId = scene.Id;
+            }
+
+            scene.Lights = updatedLights;
+            await _context.SaveChangesAsync();
+
+            return Ok($"Scene {id} updated successfully.");
+        }
+
         // private const string FilePath = "lights.json";
 
         // [HttpPost("save")]

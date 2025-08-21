@@ -9,5 +9,6 @@ namespace LightboardApi.Data
             : base(options) { }
 
         public DbSet<Light> Lights { get; set; }
+        public DbSet<Scene> Scenes { get; set; }
     }
 }
